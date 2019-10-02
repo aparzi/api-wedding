@@ -10,17 +10,12 @@ class Partecipazione implements JsonSerializable
 {
 
     /**
-     * @var string | null
+     * @var string
      */
     private $fullname;
 
     /**
      * @var string
-     */
-    private $email;
-
-    /**
-     * @var boolean
      */
     private $reply;
 
@@ -31,21 +26,19 @@ class Partecipazione implements JsonSerializable
 
     /**
      * Partecipazione constructor.
-     * @param string|null $fullname
-     * @param string $email
+     * @param string $fullname
      * @param bool $reply
      * @param string|null $description
      */
-    public function __construct(string $fullname, string $email, bool $reply, string $description)
+    public function __construct(string $fullname, string $reply, string $description)
     {
         $this->fullname = $fullname;
-        $this->email = $email;
         $this->reply = $reply;
         $this->description = $description;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getFullname(): string
     {
@@ -53,7 +46,7 @@ class Partecipazione implements JsonSerializable
     }
 
     /**
-     * @param string|null $fullname
+     * @param string $fullname
      */
     public function setFullname(string $fullname)
     {
@@ -63,31 +56,15 @@ class Partecipazione implements JsonSerializable
     /**
      * @return string
      */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isReply(): bool
+    public function getReply(): string
     {
         return $this->reply;
     }
 
     /**
-     * @param bool $reply
+     * @param string $reply
      */
-    public function setReply(bool $reply)
+    public function setReply(string $reply): void
     {
         $this->reply = $reply;
     }
@@ -116,7 +93,6 @@ class Partecipazione implements JsonSerializable
     {
         return [
             'fullname' => $this->fullname,
-            'email' => $this->email,
             'reply' => $this->reply,
             'description' => $this->description
         ];

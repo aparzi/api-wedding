@@ -31,18 +31,26 @@ class MailController
     public function sendEmail(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $partecipazione = new Partecipazione($body['fullname'],$body['email'],$body['reply'],$body['description']);
+        $partecipazione = new Partecipazione($body['fullname'],$body['reply'],$body['description']);
         try {
             $this->configSmtp();
 
-            //Recipients
-            $this->email->setFrom($partecipazione->getEmail(), $partecipazione->getFullname());
-            $this->email->addAddress('angeloparziale94@gmail.com');     // Add a recipient
+            //From and Recipients
+            $this->email->setFrom($this->configurazioneService->getValoreByChiave("smtp.username.gmail"));
+            $recipients = $this->configurazioneService->getValoreByChiave("email.recipients");
+            foreach (explode(";", $recipients) as $recipient)
+            {
+                $this->email->addAddress($recipient);
+
+            }
 
             // Content
-            $this->email->isHTML(true);                                  // Set email format to HTML
-            $this->email->Subject = 'Partecipazione: ' . $partecipazione->getFullname();
-            $this->email->Body    = $partecipazione->getDescription();
+            $this->email->isHTML(true); // Set email format to HTML
+            $this->email->Subject = 'Wedding - Partecipazione: ' . $partecipazione->getFullname();
+            $this->email->Body = 'Una nuova risposta di partecipazione è arrivta, di seguito i dettagli: <br><br>
+                                <b>Nome e Cognome</b>: ' . $partecipazione->getFullname() . '<br>
+                                <b>Risposta</b>: ' . $partecipazione->getReply() . '<br>
+                                <b>Dettagli Aggiuntivi</b>: ' . $partecipazione->getDescription();
 
             $this->email->send();
             return JsonUtils::buildJsonResponse($response, new Result(true, 'OK'));
